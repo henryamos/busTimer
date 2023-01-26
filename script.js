@@ -1,18 +1,19 @@
-
 function solution(schedule, time) {
-    const currentTime = new Date(`January 1, 1970 ${time}`);
-    for (let i = 0; i < schedule.length; i++) {
-      const busTime = new Date(`January 1, 1970 ${schedule[i]}`);
-      if (busTime > currentTime) {
-        if (i === 0) {
-          return -1;
-        } else {
-          const lastBusTime = new Date(`January 1, 1970 ${schedule[i - 1]}`);
-          return (currentTime - lastBusTime) / 60000;
-        }
+  let timeLeft = -1;
+  for (let i = 0; i < schedule.length; i++) {
+      if(time === schedule[0]) break;
+      let scheduleHour = parseInt(schedule[i].split(":")[0]);
+      let scheduleMin  = parseInt(schedule[i].split(":")[1]);
+      let timeHour = parseInt(time.split(":")[0]);
+      let timeMin  = parseInt(time.split(":")[1]);
+      if((scheduleHour <= timeHour && scheduleMin < timeMin) || (scheduleHour < timeHour)) {
+          let time1 = new Date(`1970-01-01T${schedule[i]}:00Z`);
+          let time2 = new Date(`1970-01-01T${time}:00Z`);
+          let diffInMilliSeconds = Math.abs(time2 - time1);
+          let diffInMinutes = Math.floor(diffInMilliSeconds / (60 * 1000));
+          timeLeft = diffInMinutes;
       }
-    }
-    const lastBusTime = new Date(`January 1, 1970 ${schedule[schedule.length - 1]}`);
-    return (currentTime - lastBusTime) / 60000;
   }
-console.log(solution(["12:30", "14:00", "19:55"],"14:30"));
+  return timeLeft;
+}
+console.log(solution(["12:30", "14:00", "19:55"],"14:00"));
